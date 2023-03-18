@@ -90,15 +90,33 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
 // A data memory in |cpu at the given stage. Reads and writes in the same stage, where reads are of the data written by the previous transaction.
 \TLV dmem(@_stage)
    // Data Memory
+   // modes 01 - byte, 10 - half, 11 - word
+   // addr[1:0] - 00 - dmem_byte0, 01 - dmem_byte1, 10 - dmem_byte2, 11 - dmem_byte3
+   // address must be aligned with type of access (byte, half, word)
    @_stage
-      /dmem[15:0]
-         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
-         $value[31:0] = |cpu$reset ?   #dmem :
-                        $wr        ?   |cpu$dmem_wr_data :
+      /dmem_byte0[63:0]
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte0);
+         $value[7:0] = |cpu$reset ?   #dmem_byte0 :
+                        $wr        ?   |cpu$dmem_wr_data[7:0] :
                                        $RETAIN;
-                                  
+      /dmem_byte1[63:0]
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte1);
+         $value[7:0] = |cpu$reset ?   #dmem_byte1 :
+                        $wr        ?   |cpu$dmem_wr_data[15:8] :
+                                       $RETAIN;
+      /dmem_byte2[63:0]
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte2);
+         $value[7:0] = |cpu$reset ?   #dmem_byte2 :
+                        $wr        ?   |cpu$dmem_wr_data[23:16] :
+                                       $RETAIN;
+      /dmem_byte3[63:0]
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte3);
+         $value[7:0] = |cpu$reset ?   #dmem_byte3 :
+                        $wr        ?   |cpu$dmem_wr_data[31:24] :
+                                       $RETAIN;
+                                       
       ?$dmem_rd_en
-         $dmem_rd_data[31:0] = /dmem[$dmem_addr]>>1$value;
+         $dmem_rd_data[31:0] = {/dmem_byte3[$dmem_addr]>>1$value, /dmem_byte2[$dmem_addr]>>1$value, /dmem_byte1[$dmem_addr]>>1$value, /dmem_byte0[$dmem_addr]>>1$value ;
       `BOGUS_USE($dmem_rd_data)
 
 \TLV myth_fpga(@_stage)
