@@ -104,32 +104,32 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
       //\SV_plus
       //   \$display ("Word access mem illegal. Address is not word aligned.");
       
-      /dmem_byte0[63:0]
+      /dmem_byte0[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte0);
          $value[7:0] = |cpu$reset ?   #dmem_byte0 :
                        $wr && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[7:0] :
                                        $RETAIN;
-      /dmem_byte1[63:0]
+      /dmem_byte1[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte1);
          $value[7:0] = |cpu$reset ?   #dmem_byte1 :
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b01)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b10) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[15:8] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[15:8] :
                                        $RETAIN;
-      /dmem_byte2[63:0]
+      /dmem_byte2[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte2);
          $value[7:0] = |cpu$reset ?   #dmem_byte2 :
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b10)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b10) && (|cpu$dmem_addr[1:0]==2'b10)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[23:16] :
                                        $RETAIN;
-      /dmem_byte3[63:0]
+      /dmem_byte3[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte3);
          $value[7:0] = |cpu$reset ?   #dmem_byte3 :
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b11)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[31:24] :
                                        $RETAIN;
-      
+      //replica memory for cpu_viz
       /dmem[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
          $value[31:0] = |cpu$reset ?   #dmem :
