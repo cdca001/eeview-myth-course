@@ -93,7 +93,15 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
    // modes 01 - byte, 10 - half, 11 - word
    // addr[1:0] - 00 - dmem_byte0, 01 - dmem_byte1, 10 - dmem_byte2, 11 - dmem_byte3
    // address must be aligned with type of access (byte, half, word)
+   // half - valid only when addr[1:0] is [00, 10], word - valid only when addr[1:0] is [00]
    @_stage
+      ?(($mode == 10) && ($dmem_addr[0] != 1'b0))
+      \SV_plus
+         $display("Half-word mem access illegal. Address is not half-word aligned.")
+      ?(($mode == 11) && ($dmem_addr[1:0] != 2'b00))
+      \SV_plus
+         $display("Word access mem illegal. Address is not word aligned.")   
+      
       /dmem_byte0[63:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte0);
          $value[7:0] = |cpu$reset ?   #dmem_byte0 :
