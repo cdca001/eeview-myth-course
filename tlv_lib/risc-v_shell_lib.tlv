@@ -133,7 +133,7 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
       /dmem[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
          $value[31:0] = |cpu$reset ?   #dmem :
-                        $wr        ?   {{/dmem_byte3[#dmem]$value}, {/dmem_byte2[#dmem]$value}, {/dmem_byte1[#dmem]$value}, {/dmem_byte0[#dmem]$value}} :
+                        $wr        ?   {{/top/dmem_byte3[#dmem]$value}, {/top/dmem_byte2[#dmem]$value}, {/top/dmem_byte1[#dmem]$value}, {/top/dmem_byte0[#dmem]$value}} :
                                        $RETAIN;
                                        
       ?$dmem_rd_en
