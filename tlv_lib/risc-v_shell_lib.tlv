@@ -97,12 +97,12 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
    @_stage
       $half_word_align_check = (($dmem_mode == 2'b10) && ($dmem_addr[0] != 1'b0));
       $word_align_check = (($dmem_mode == 2'b11) && ($dmem_addr[1:0] != 2'b00));
-      //?$half_word_align_check
-      //\SV_plus
-      //   \$display ("Half-word mem access illegal. Address is not half-word aligned.");
-      //?$word_align_check
-      //\SV_plus
-      //   \$display ("Word access mem illegal. Address is not word aligned.");
+      ?$half_word_align_check
+      \SV_plus
+         \$display ("Half-word mem access illegal. Address is not half-word aligned.");
+      ?$word_align_check
+      \SV_plus
+         \$display ("Word access mem illegal. Address is not word aligned.");
       
       /dmem_byte0[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte0);
