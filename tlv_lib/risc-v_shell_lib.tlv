@@ -116,7 +116,7 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
                                        $RETAIN;
                                        
       ?$dmem_rd_en
-         $dmem_rd_data[31:0] = {/dmem_byte3[$dmem_addr]>>1$value, /dmem_byte2[$dmem_addr]>>1$value, /dmem_byte1[$dmem_addr]>>1$value, /dmem_byte0[$dmem_addr]>>1$value};
+         $dmem_rd_data[31:0] = {{/dmem_byte3[$dmem_addr]>>1$value}, {/dmem_byte2[$dmem_addr]>>1$value}, {/dmem_byte1[$dmem_addr]>>1$value}, {/dmem_byte0[$dmem_addr]>>1$value}} ;
       `BOGUS_USE($dmem_rd_data)
 
 \TLV myth_fpga(@_stage)
