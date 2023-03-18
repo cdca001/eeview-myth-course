@@ -1,6 +1,7 @@
+\m4_TLV_version 1d -p verilog --bestsv --noline: tl-x.org
 //\m4_TLV_version 1d: tl-x.org
 //change first line to this if working on fpga (recommended by Bala)
-\m4_TLV_version 1d -p verilog --bestsv --noline: tl-x.org
+//\m4_TLV_version 1d -p verilog --bestsv --noline: tl-x.org
 \SV
    // This code can be found in: https://github.com/stevehoover/RISC-V_MYTH_Workshop
    
