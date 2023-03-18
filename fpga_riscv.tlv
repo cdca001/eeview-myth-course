@@ -5,8 +5,9 @@
 \SV
    // This code can be found in: https://github.com/stevehoover/RISC-V_MYTH_Workshop
    
-   //m4_include_lib(['https://raw.githubusercontent.com/BalaDhinesh/RISC-V_MYTH_Workshop/master/tlv_lib/risc-v_shell_lib.tlv'])
-   m4_include_lib(['https://raw.githubusercontent.com/cdca001/eeview-myth-course/main/tlv_lib/risc-v_shell_lib.tlv'])
+   // Use Bala lib.tlv if working on fpga
+   m4_include_lib(['https://raw.githubusercontent.com/BalaDhinesh/RISC-V_MYTH_Workshop/master/tlv_lib/risc-v_shell_lib.tlv'])
+   //m4_include_lib(['https://raw.githubusercontent.com/cdca001/eeview-myth-course/main/tlv_lib/risc-v_shell_lib.tlv'])
 
 \SV
    m4_makerchip_module   // (Expanded in Nav-TLV pane.)
@@ -58,27 +59,6 @@
    //idata2.asm - not yet tested
    //idata3.asm - issue when 2 consecutive loads solved - confirmed working
    //idata4.asm - testing
-   m4_asm(ADD, r2, r0, r0)
-   m4_asm(ADD, r8, r0, r0)
-   m4_asm(SW, r2, r8, 101100)
-   m4_asm(ADDI, r8, r2, 110000)
-   m4_asm(ADDI, r15, r0, 10)
-   m4_asm(SW, r8, r15, 111111011000)
-   m4_asm(ADDI, r15, r0, 0011)
-   m4_asm(SW, r8, r15, 111111011100)
-   m4_asm(LW, r15, r8, 111111011100)
-   m4_asm(SW, r8, r15, 111111101100)
-   m4_asm(ADDI, r15, r0, 000001100001)
-   m4_asm(SB, r8, r15, 111111101011)
-   m4_asm(LBU, r15, r8, 111111101011)
-   m4_asm(SB, r8, r15, 111111101010)
-   m4_asm(ADDI, r15, r0, 1010)
-   m4_asm(SH, r8, r15, 111111101000)
-   m4_asm(LHU, r15, r8, 111111101000)
-   m4_asm(SH, r8, r15, 111111011100)
-   m4_asm(ADDI, r0, r0, 0)
-   m4_asm(LW, r8, r2, 000000101100)
-   m4_asm(JAL, r0, 0)
    // Optional:
    // m4_asm(JAL, r7, 00000000000000000000) // Done. Jump to itself (infinite loop). (Up to 20-bit signed immediate plus implicit 0 bit (unlike JALR) provides byte address; last immediate bit should also be 0)
    m4_define_hier(['M4_IMEM'], M4_NUM_INSTRS)
