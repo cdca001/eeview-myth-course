@@ -129,6 +129,12 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b11)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[31:24] :
                                        $RETAIN;
+      
+      /dmem[15:0]
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
+         $value[31:0] = |cpu$reset ?   #dmem :
+                        $wr        ?   {{/dmem_byte3[#dmem]$value}, {/dmem_byte2[#dmem]$value}, {/dmem_byte1[#dmem]$value}, {/dmem_byte0[#dmem]$value}} :
+                                       $RETAIN;
                                        
       ?$dmem_rd_en
          $dmem_rd_data[31:0] = {{/dmem_byte3[$dmem_addr]>>1$value}, {/dmem_byte2[$dmem_addr]>>1$value}, {/dmem_byte1[$dmem_addr]>>1$value}, {/dmem_byte0[$dmem_addr]>>1$value}} ;
