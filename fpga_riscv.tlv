@@ -214,7 +214,10 @@
                              $result;
       @4
          $dmem_addr[3:0] = $result[3:0];
-         $dmem_mode[1:0] = 2'b11;
+         $dmem_mode[1:0] = $is_sw ? 2'b11 :
+                           $is_sh ? 2'b10 :
+                           $is_sb ? 2'b01 :
+                           2'b11;
          $dmem_rd_en = $is_load && $valid;
          $dmem_wr_en = $is_store && $valid;
          $dmem_wr_data[31:0] = $is_sw ? $src2_value :
