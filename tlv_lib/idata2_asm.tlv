@@ -1,5 +1,5 @@
 \m4_TLV_version 1d: tl-x.org
-m4_define(['idata2'],
+m4_define(['m4_idata2'],
  ['m4_asm(ADD, r31, r0, r0)
   m4_asm(LUI, r1, 10100000000000000)
   m4_asm(ADDI, r2, r0, 10100)
