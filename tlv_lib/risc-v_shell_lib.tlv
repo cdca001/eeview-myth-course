@@ -106,33 +106,33 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
       
       /dmem_byte0[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte0);
-         $value[7:0] = |cpu$reset ?   #dmem_byte0 :
+         $value[7:0] = |cpu$reset ?   #dmem_byte0 : //reset value for LSB is equal to word address
                        $wr && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[7:0] :
                                        $RETAIN;
       /dmem_byte1[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte1);
-         $value[7:0] = |cpu$reset ?   #dmem_byte1 :
+         $value[7:0] = |cpu$reset ?   7'b0 : //reset value is 0 for bytes 3 to 1
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b01)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b10) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[15:8] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[15:8] :
                                        $RETAIN;
       /dmem_byte2[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte2);
-         $value[7:0] = |cpu$reset ?   #dmem_byte2 :
+         $value[7:0] = |cpu$reset ?   7'b0 : //reset value is 0 for bytes 3 to 1
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b10)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b10) && (|cpu$dmem_addr[1:0]==2'b10)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[23:16] :
                                        $RETAIN;
       /dmem_byte3[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem_byte3);
-         $value[7:0] = |cpu$reset ?   #dmem_byte3 :
+         $value[7:0] = |cpu$reset ?   7'b0 : //reset value is 0 for bytes 3 to 1
                        $wr && (|cpu$dmem_mode[1:0]==2'b01) && (|cpu$dmem_addr[1:0]==2'b11)   ?   |cpu$dmem_wr_data[7:0] :
                        $wr && (|cpu$dmem_mode[1:0]==2'b11) && (|cpu$dmem_addr[1:0]==2'b00)   ?   |cpu$dmem_wr_data[31:24] :
                                        $RETAIN;
       //replica memory for cpu_viz
       /dmem[15:0]
          $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
-         $value[31:0] = |cpu$reset ?   #dmem :
+         $value[31:0] = |cpu$reset ?   {{/top|cpu/dmem_byte3[#dmem]$value}, {/top|cpu/dmem_byte2[#dmem]$value}, {/top|cpu/dmem_byte1[#dmem]$value}, {/top|cpu/dmem_byte0[#dmem]$value}} :
                         $wr        ?   {{/top|cpu/dmem_byte3[#dmem]$value}, {/top|cpu/dmem_byte2[#dmem]$value}, {/top|cpu/dmem_byte1[#dmem]$value}, {/top|cpu/dmem_byte0[#dmem]$value}} :
                                        $RETAIN;
                                        
