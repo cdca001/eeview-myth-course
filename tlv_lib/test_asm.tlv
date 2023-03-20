@@ -1,6 +1,20 @@
 \m4_TLV_version 1d: tl-x.org
 m4_define(['m4_test_asm'],
- ['m4_asm(ADD, r10, r0, r0)             // Initialize r10 (a0) to 0.
+ ['// /====================\
+   // | Sum 1 to 9 Program |
+   // \====================/
+   //
+   // Program for MYTH Workshop to test RV32I
+   // Add 1,2,3,...,9 (in that order).
+   //
+   // Regs:
+   //  r10 (a0): In: 0, Out: final sum
+   //  r12 (a2): 10
+   //  r13 (a3): 1..10
+   //  r14 (a4): Sum
+   //
+   // External to function
+   m4_asm(ADD, r10, r0, r0)             // Initialize r10 (a0) to 0.
    // Function:
    m4_asm(ADD, r14, r10, r0)            // Initialize sum register a4 with 0x0
    m4_asm(ADDI, r12, r10, 1010)         // Store count of 10 in register a2.
