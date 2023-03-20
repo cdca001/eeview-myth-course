@@ -1,0 +1,16 @@
+\m4_TLV_version 1d: tl-x.org
+m4_define(['m4_idata1'],
+ ['m4_asm(ADDI, r31, r0, 1)
+   m4_asm(ADDI, r2, r0, 100)
+   m4_asm(XORI, r1, r2, 011)
+   m4_asm(BEQ, r1, r2, 100100)
+   m4_asm(BLT, r2, r1, 10000)
+   m4_asm(SUB, r3, r1, r2)
+   m4_asm(AND, r1, r1, r3)
+   m4_asm(BEQ, r1, r3, 10100)
+   m4_asm(ADD, r3, r0, r0)
+   m4_asm(ADD, r0, r2, r1)
+   m4_asm(BNE, r0, r3, 1000)
+   m4_asm(BGE, r3, r0, 1000)
+   m4_asm(ADD, r31, r0, r0)
+   m4_asm(JAL, r0, 0)'])
