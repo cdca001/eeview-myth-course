@@ -17,7 +17,7 @@ m4_define(['m4_idata4_asm'],
   m4_asm(ADDI, r15, r0, 1010)
   m4_asm(SH, r8, r15, 111111101000)
   m4_asm(LHU, r15, r8, 111111101000)
-  m4_asm(SH, r8, r15, 111111011100)
+  m4_asm(SH, r8, r15, 111111100110)
   m4_asm(ADDI, r0, r0, 0)
   m4_asm(LW, r8, r2, 000000101100)
   m4_asm(JAL, r0, 0)'])
