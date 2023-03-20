@@ -6,7 +6,7 @@ m4_define(['m4_idata2_asm'],
   m4_asm(BEQ, r2, r1, 101100)
   m4_asm(AUIPC, r3, 100000000000000)
   m4_asm(BEQ, r3, r1, 100100)
-  m4_asm(JAL, r4, 1000)
+  m4_asm(JAL, r4, 0100)
   m4_asm(BEQ, r0, r0, 11100)
   m4_asm(ADDI, r5, r0, 11100)
   m4_asm(BNE, r4, r5, 10100)
