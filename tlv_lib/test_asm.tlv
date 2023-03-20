@@ -40,5 +40,7 @@ m4_define(['m4_test_asm'],
    m4_asm(ADD, r0, r0, r0) //NOP
    m4_asm(ADD, r0, r0, r0) //NOP
    m4_asm(ADD, r0, r0, r0) //NOP
-   m4_asm(ADD, r0, r0, r0) //NOP 
+   m4_asm(ADD, r0, r0, r0) //NOP
+   // Optional:
+   // m4_asm(JAL, r7, 00000000000000000000) // Done. Jump to itself (infinite loop). (Up to 20-bit signed immediate plus implicit 0 bit (unlike JALR) provides byte address; last immediate bit should also be 0)
    '])
