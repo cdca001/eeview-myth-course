@@ -131,7 +131,7 @@ m4_ifelse_block(M4_MAKERCHIP, 1,['
                                        $RETAIN;
       //replica memory for cpu_viz
       /dmem[15:0]
-         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr == #dmem);
+         $wr = |cpu$dmem_wr_en && (|cpu$dmem_addr[5:2] == #dmem);
          $value[31:0] = |cpu$reset ?   {{/top|cpu/dmem_byte3[#dmem]$value}, {/top|cpu/dmem_byte2[#dmem]$value}, {/top|cpu/dmem_byte1[#dmem]$value}, {/top|cpu/dmem_byte0[#dmem]$value}} :
                         $wr        ?   {{/top|cpu/dmem_byte3[#dmem]$value}, {/top|cpu/dmem_byte2[#dmem]$value}, {/top|cpu/dmem_byte1[#dmem]$value}, {/top|cpu/dmem_byte0[#dmem]$value}} :
                                        $RETAIN;
