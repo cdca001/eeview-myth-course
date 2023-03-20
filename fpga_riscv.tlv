@@ -12,55 +12,22 @@
 \SV
    m4_makerchip_module   // (Expanded in Nav-TLV pane.)
 \TLV
-
-   // /====================\
-   // | Sum 1 to 9 Program |
-   // \====================/
-   //
-   // Program for MYTH Workshop to test RV32I
-   // Add 1,2,3,...,9 (in that order).
-   //
-   // Regs:
-   //  r10 (a0): In: 0, Out: final sum
-   //  r12 (a2): 10
-   //  r13 (a3): 1..10
-   //  r14 (a4): Sum
-   // 
-   // External to function:
-   //m4_asm(ADD, r10, r0, r0)             // Initialize r10 (a0) to 0.
-   // Function:
-   //m4_asm(ADD, r14, r10, r0)            // Initialize sum register a4 with 0x0
-   //m4_asm(ADDI, r12, r10, 1010)         // Store count of 10 in register a2.
-   //m4_asm(ADD, r13, r10, r0)            // Initialize intermediate sum register a3 with 0
-   // Loop:
-   //m4_asm(ADD, r14, r13, r14)           // Incremental addition
-   //m4_asm(ADDI, r13, r13, 1)            // Increment intermediate register by 1
-   //m4_asm(BLT, r13, r12, 1111111111000) // If a3 is less than a2, branch to label named <loop>
-   //m4_asm(ADD, r10, r14, r0)            // Store final result to register a0 so that it can be read by main program   
-   //m4_asm(JAL, r17, 0000000000001110)
-   //m4_asm(ADDI, r1, r0, 0100) //r1=4
-   //m4_asm(ADDI, r2, r0, 0011) //r2=3
-   //m4_asm(ADDI, r3, r0, 0010) //r3=2
-   //m4_asm(ADDI, r4, r0, 0001) //r4=1
-   //m4_asm(JAL, r0, 0000000000001010) //jump to end
-   //m4_asm(ADDI, r15, r0, 1010) //this should not be executed
-   //load/store test:
-   //m4_asm(SW, r0, r10, 100)
-   //m4_asm(LW, r15, r0, 100)
-   //m4_asm(JALR, r0, r17, 0) //return 
-   //end:
-   //m4_asm(ADDI, r16, r0, 1010)
-   //m4_asm(ADD, r0, r0, r0) //NOP
-   //m4_asm(ADD, r0, r0, r0) //NOP
-   //m4_asm(ADD, r0, r0, r0) //NOP
-   //m4_asm(ADD, r0, r0, r0) //NOP
-   
+   //test sum of numbers from 1 to 9 
+   //m4_test_asm
    //idata1.asm - confirmed working
-   //idata2.asm - not yet tested
+   //m4_idata1_asm
+   //idata2.asm - tested - confirmed working
+   //m4_idata2_asm
    //idata3.asm - issue when 2 consecutive loads solved - confirmed working
-   //idata4.asm - testing
-   // Optional:
-   // m4_asm(JAL, r7, 00000000000000000000) // Done. Jump to itself (infinite loop). (Up to 20-bit signed immediate plus implicit 0 bit (unlike JALR) provides byte address; last immediate bit should also be 0)
+   //m4_idata3_asm
+   //idata4.asm - tested - confirmed working
+   //m4_idata4_asm
+   //m4_asm(ADD, r0, r0, r0)
+   //m4_asm(LW, r10, r0, 100)
+   //m4_asm(SW, r0, r10, 100)
+   //m4_asm(ADDI, r10, r0, 1100)
+   //m4_asm(JAL, r0, 0)
+      
    m4_define_hier(['M4_IMEM'], M4_NUM_INSTRS)
 
    |cpu
@@ -81,7 +48,7 @@
       @1
          //*passed = |cpu/xreg[10]>>5$value == (1+2+3+4+5+6+7+8+9);
          //*passed = |cpu/xreg[16]>>5$value == (10);
-         *passed = *cyc_cnt > 36;
+         *passed = *cyc_cnt > 100;
          $inc_pc[31:0] = $pc + 4;
          
          $instr[31:0] = $imem_rd_data;
@@ -166,13 +133,13 @@
          $rf_rd_index2[4:0] = $rs2;
          $src1_value[31:0] = ((>>1$rf_wr_en) && ($rs1 == >>1$rd)) ? >>1$result :
                              $rf_rd_data1;
-         $src2_value[31:0] = ((>>1$rf_wr_en) && ($rs2 == >>1$rd)) ? >>1$result : 
+         $src2_value[31:0] = ((>>1$rf_wr_en) && ($rs2 == >>1$rd)) ? >>1$result :
                              $rf_rd_data2;
          $br_tgt_pc[31:0] = $pc + $imm;
          $jalr_tgt_pc[31:0] = $src1_value + $imm;
          
       @3
-         $valid = (!(>>1$taken_br) && !(>>2$taken_br)) && (!(>>1$is_load && !$is_load) && !(>>2$is_load && !$is_load)) && (!(>>1$taken_jump) && !(>>2$taken_jump));
+         $valid = (!(>>1$valid_taken_br) && !(>>2$valid_taken_br)) && (!(>>1$is_load && !$is_load) && !(>>2$is_load && !$is_load)) && (!(>>1$taken_jump) && !(>>2$taken_jump));
          $valid_load_redir = ($valid && $is_load) && (!>>2$taken_br) && (!>>2$taken_jump);
          $valid_taken_br = ($valid && $taken_br) && (!>>2$is_load) && (!>>2$taken_jump);
          $valid_jump = ($valid && $taken_jump) && (!>>2$is_load) && (!>>2$taken_br);
@@ -213,17 +180,20 @@
                              ($taken_jump) ? $inc_pc :
                              $result;
       @4
-         $dmem_addr[3:0] = $result[3:0];
-         $dmem_mode[1:0] = $is_sw ? 2'b11 :
-                           $is_sh ? 2'b10 :
-                           $is_sb ? 2'b01 :
+         $dmem_addr[31:0] = $result[31:0];
+         $dmem_mode[1:0] = $is_sw || $is_lw ? 2'b11 :
+                           $is_sh || $is_lhu ? 2'b10 :
+                           $is_sb || $is_lbu ? 2'b01 :
                            2'b11;
          $dmem_rd_en = $is_load && $valid;
          $dmem_wr_en = $is_store && $valid;
-         $dmem_wr_data[31:0] = $is_sw ? $src2_value :
-                               $is_sh ? {16'b0, $src2_value[15:0]} :
-                               $is_sb ? {24'b0, $src2_value[7:0]} :
-                               $src2_value;
+         //$store_value[31:0] = $src2_value;
+         $store_value[31:0] = ((>>3$is_load && $is_store) && (>>1$rd == >>1$rs2)) ? >>2$ld_data :
+                              $src2_value;
+         $dmem_wr_data[31:0] = $is_sw ? $store_value :
+                               $is_sh ? {16'b0, $store_value[15:0]} :
+                               $is_sb ? {24'b0, $store_value[7:0]} :
+                               $store_value;
       @5
          $ld_data[31:0] = $is_lw ? $dmem_rd_data :
                           $is_lhu ? {16'b0, $dmem_rd_data[15:0]} :
@@ -249,7 +219,7 @@
       m4+imem(@1)    // Args: (read stage)
       m4+rf(@2, @3)  // Args: (read stage, write stage) - if equal, no register bypass is required
       m4+dmem(@4)    // Args: (read/write stage)
-      m4+myth_fpga(@0)  // Uncomment to run on fpga
+      //m4+myth_fpga(@0)  // Uncomment to run on fpga
 
    m4+cpu_viz(@4)    // For visualisation, argument should be at least equal to the last stage of CPU logic. @4 would work for all labs.
 \SV
